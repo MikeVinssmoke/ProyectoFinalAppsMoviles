@@ -1,2 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <dimen name="radius_card">20dp</dimen>
+    <dimen name="radius_card_large">28dp</dimen>
+    <dimen name="radius_pill">999dp</dimen>
+    <dimen name="spacing_xs">4dp</dimen>
+    <dimen name="spacing_sm">8dp</dimen>
+    <dimen name="spacing_md">16dp</dimen>
+    <dimen name="spacing_lg">24dp</dimen>
+    <dimen name="icon_size">44dp</dimen>
+    <dimen name="icon_radius">14dp</dimen>
+</resources>

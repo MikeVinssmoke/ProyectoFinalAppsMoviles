@@ -1,3 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ProyectoFinalAppsMoviles</string>
+    <string name="app_name">Nodo Cívico</string>
+    <string name="nav_home">Inicio</string>
+    <string name="nav_reports">Reportes</string>
+    <string name="nav_sync">Sync</string>
+    <string name="nav_settings">Ajustes</string>
+    <string name="status_open">Abierto</string>
+    <string name="status_progress">En proceso</string>
+    <string name="status_closed">Cerrado</string>
+    <string name="empty_reports">No hay reportes todavía.\nCrea el primero con el botón +</string>
+    <string name="btn_new_report">+ Nuevo reporte</string>
+    <string name="btn_view_reports">Ver reportes</string>
+    <string name="btn_sync">Sincronizar</string>
+    <string name="btn_save">Guardar</string>
+    <string name="btn_save_offline">Guardar offline</string>
+    <string name="btn_edit">Editar</string>
+    <string name="btn_update_status">Actualizar estado</string>
+    <string name="btn_create_reminder">Crear recordatorio</string>
+    <string name="hint_title">Título del reporte</string>
+    <string name="hint_description">Describa claramente la incidencia…</string>
+    <string name="hint_location">Ubicación referencial</string>
 </resources>
