@@ -46,4 +46,33 @@ class ReportRepository(private val db: AppDatabase) {
     } catch (e: Exception) {
         Result.failure(e)
     }
+
+
+    suspend fun fetchFromServer(): Result<Unit> {
+        return try {
+            val response = NetworkManager.apiService.getReports()
+            if (response.isSuccessful) {
+                response.body()?.let { remoteReports ->
+                    for (r in remoteReports) {
+                        db.reportDao().insert(
+                            ReportEntity(
+                                title       = r.title,
+                                description = r.description,
+                                category    = r.category,
+                                priority    = r.priority,
+                                status      = r.status,
+                                location    = r.location,
+                                date        = r.date,
+                                isSynced    = true,
+                                serverId    = r.id
+                            )
+                        )
+                    }
+                }
+            }
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

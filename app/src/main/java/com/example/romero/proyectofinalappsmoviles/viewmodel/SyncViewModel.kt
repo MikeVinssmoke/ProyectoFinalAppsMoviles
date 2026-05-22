@@ -32,7 +32,8 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
     fun synchronize() {
         viewModelScope.launch {
             _isSyncing.value = true
-            _syncResult.value = reportRepo.syncWithServer()
+            reportRepo.fetchFromServer()  // ← primero descarga
+            _syncResult.value = reportRepo.syncWithServer()  // luego sube
             _isSyncing.value = false
         }
     }
