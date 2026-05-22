@@ -32,9 +32,21 @@ class ReportListFragment : Fragment() {
         b.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         b.recyclerView.adapter = adapter
 
+        // Estado de carga inicial
+        b.progressBar.visibility = View.VISIBLE
+        b.recyclerView.visibility = View.GONE
+        b.emptyView.visibility = View.GONE
+
         vm.filteredReports.observe(viewLifecycleOwner) { list ->
+            b.progressBar.visibility = View.GONE
+            if (list.isEmpty()) {
+                b.emptyView.visibility = View.VISIBLE
+                b.recyclerView.visibility = View.GONE
+            } else {
+                b.emptyView.visibility = View.GONE
+                b.recyclerView.visibility = View.VISIBLE
+            }
             adapter.submitList(list)
-            b.emptyView.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
         }
 
         b.chipAll.setOnClickListener      { vm.setStatusFilter(null) }
