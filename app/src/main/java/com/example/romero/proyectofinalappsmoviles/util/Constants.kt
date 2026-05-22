@@ -3,7 +3,7 @@ package com.example.romero.proyectofinalappsmoviles.util
 object Constants {
     // Cambia por la IP de tu servidor Flask
     // 10.0.2.2 apunta a localhost cuando usas el emulador
-    const val BASE_URL = "http://10.0.2.2:5000/"
+    const val BASE_URL = "https://proyectofinal2026.pythonanywhere.com/"
 
     const val PREFS_NAME          = "nodocivico_prefs"
     const val PREF_THEME          = "pref_theme"
