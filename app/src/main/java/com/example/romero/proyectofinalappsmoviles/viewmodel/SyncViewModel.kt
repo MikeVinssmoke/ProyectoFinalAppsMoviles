@@ -32,8 +32,15 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
     fun synchronize() {
         viewModelScope.launch {
             _isSyncing.value = true
-            reportRepo.fetchFromServer()  // ← primero descarga
-            _syncResult.value = reportRepo.syncWithServer()  // luego sube
+            val fetchResult = reportRepo.fetchFromServer()
+            val syncResult = reportRepo.syncWithServer()
+
+            // Si cualquiera falló, reportar fallo
+            _syncResult.value = if (fetchResult.isFailure || syncResult.isFailure) {
+                Result.failure(fetchResult.exceptionOrNull() ?: syncResult.exceptionOrNull() ?: Exception("Error desconocido"))
+            } else {
+                Result.success(Unit)
+            }
             _isSyncing.value = false
         }
     }

@@ -50,13 +50,15 @@ class ReportDetailFragment : Fragment() {
             b.tvSyncBadge.text = if (r.isSynced) "✓ Sincronizado" else "⏳ Pendiente sync"
 
             b.btnUpdateStatus.setOnClickListener {
-                val next = when (r.status) {
-                    "ABIERTO"    -> "EN_PROCESO"
-                    "EN_PROCESO" -> "CERRADO"
-                    else         -> "ABIERTO"
-                }
-                vm.updateReport(r.copy(status = next, isSynced = false))
-                Toast.makeText(requireContext(), "Estado → $next", Toast.LENGTH_SHORT).show()
+                val estados = arrayOf("ABIERTO", "EN_PROCESO", "CERRADO")
+                androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    .setTitle("Cambiar estado")
+                    .setItems(estados) { _, which ->
+                        val nuevoEstado = estados[which]
+                        vm.updateReport(r.copy(status = nuevoEstado, isSynced = false))
+                        Toast.makeText(requireContext(), "Estado → $nuevoEstado", Toast.LENGTH_SHORT).show()
+                    }
+                    .show()
             }
 
             b.btnEdit.setOnClickListener {

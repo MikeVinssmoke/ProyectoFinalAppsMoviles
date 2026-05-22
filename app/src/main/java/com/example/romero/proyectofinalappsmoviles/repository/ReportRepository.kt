@@ -54,19 +54,22 @@ class ReportRepository(private val db: AppDatabase) {
             if (response.isSuccessful) {
                 response.body()?.let { remoteReports ->
                     for (r in remoteReports) {
-                        db.reportDao().insert(
-                            ReportEntity(
-                                title       = r.title,
-                                description = r.description,
-                                category    = r.category,
-                                priority    = r.priority,
-                                status      = r.status,
-                                location    = r.location,
-                                date        = r.date,
-                                isSynced    = true,
-                                serverId    = r.id
+                        val existing = db.reportDao().getReportByServerId(r.id)
+                        if (existing == null) {
+                            db.reportDao().insert(
+                                ReportEntity(
+                                    title       = r.title,
+                                    description = r.description,
+                                    category    = r.category,
+                                    priority    = r.priority,
+                                    status      = r.status,
+                                    location    = r.location,
+                                    date        = r.date,
+                                    isSynced    = true,
+                                    serverId    = r.id
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }

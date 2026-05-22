@@ -39,4 +39,7 @@ interface ReportDao {
 
     @Query("UPDATE reports SET isSynced = 1, serverId = :serverId WHERE id = :id")
     suspend fun markSynced(id: Long, serverId: Long)
+
+    @Query("SELECT * FROM reports WHERE serverId = :serverId LIMIT 1")
+    suspend fun getReportByServerId(serverId: Long): ReportEntity?
 }
