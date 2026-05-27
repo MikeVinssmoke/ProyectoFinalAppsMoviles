@@ -8,6 +8,7 @@ import com.example.romero.proyectofinalappsmoviles.data.local.AppDatabase
 import com.example.romero.proyectofinalappsmoviles.data.local.entity.ReminderEntity
 import com.example.romero.proyectofinalappsmoviles.receiver.ReminderReceiver
 import com.example.romero.proyectofinalappsmoviles.util.Constants
+import android.os.Build
 
 class ReminderRepository(private val db: AppDatabase, private val context: Context) {
 
@@ -19,7 +20,18 @@ class ReminderRepository(private val db: AppDatabase, private val context: Conte
         val id = db.reminderDao().insert(reminder)
         val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pi = pendingIntent(id, reminder.message)
-        am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminder.triggerAt, pi)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (am.canScheduleExactAlarms()) {
+                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminder.triggerAt, pi)
+            } else {
+                // Fallback sin alarma exacta
+                am.set(AlarmManager.RTC_WAKEUP, reminder.triggerAt, pi)
+            }
+        } else {
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminder.triggerAt, pi)
+        }
+
         return id
     }
 
