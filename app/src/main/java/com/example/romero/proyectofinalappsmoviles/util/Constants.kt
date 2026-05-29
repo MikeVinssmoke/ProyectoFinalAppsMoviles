@@ -25,4 +25,11 @@ object Constants {
     const val PRIORITY_BAJA       = "BAJA"
     const val PRIORITY_MEDIA      = "MEDIA"
     const val PRIORITY_ALTA       = "ALTA"
+
+    const val PREF_USERNAME = "pref_username"
+    const val PREF_IS_LOGGED = "pref_is_logged"
+    const val HARDCODED_USER = "admin"
+    const val HARDCODED_PASS = "1234"
+
+
 }

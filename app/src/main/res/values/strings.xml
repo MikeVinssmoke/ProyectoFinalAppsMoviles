@@ -20,4 +20,5 @@
     <string name="hint_title">Título del reporte</string>
     <string name="hint_description">Describa claramente la incidencia…</string>
     <string name="hint_location">Ubicación referencial</string>
+    <string name="nav_profile">Perfil</string>
 </resources>

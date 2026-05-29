@@ -10,6 +10,9 @@ import androidx.navigation.fragment.findNavController
 import com.example.romero.proyectofinalappsmoviles.R
 import com.example.romero.proyectofinalappsmoviles.databinding.FragmentSplashBinding
 
+import android.content.Context
+import com.example.romero.proyectofinalappsmoviles.util.Constants
+
 class SplashFragment : Fragment() {
     private var _b: FragmentSplashBinding? = null
     private val b get() = _b!!
@@ -19,9 +22,18 @@ class SplashFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        b.logoContainer.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in))
+        b.logoContainer.startAnimation(
+            AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in)
+        )
         Handler(Looper.getMainLooper()).postDelayed({
-            findNavController().navigate(R.id.action_splash_to_home)
+            val prefs = requireContext()
+                .getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE)
+            val isLogged = prefs.getBoolean(Constants.PREF_IS_LOGGED, false)
+            if (isLogged) {
+                findNavController().navigate(R.id.action_splash_to_home)
+            } else {
+                findNavController().navigate(R.id.action_splash_to_login)
+            }
         }, 2000)
     }
 

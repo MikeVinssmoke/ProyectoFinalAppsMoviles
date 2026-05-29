@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_hero"
+        android:padding="28dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:background="@drawable/bg_report_icon"
+            android:gravity="center"
+            android:text="👤"
+            android:textSize="32sp" />
+
+        <TextView
+            android:id="@+id/tv_full_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bienvenido"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp" />
+
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@usuario"
+            android:textColor="#CCFFFFFF"
+            android:textSize="13sp"
+            android:layout_marginTop="4dp" />
+    </LinearLayout>
+
+    <!-- Options -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_card"
+        android:layout_margin="16dp">
+
+        <TextView
+            android:id="@+id/option_my_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="👤  Mi información"
+            android:textSize="15sp"
+            android:textColor="@color/text_primary"
+            android:padding="18dp" />
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="@color/border" />
+
+        <TextView
+            android:id="@+id/option_help"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="❓  Ayuda"
+            android:textSize="15sp"
+            android:textColor="@color/text_primary"
+            android:padding="18dp" />
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="@color/border" />
+
+        <TextView
+            android:id="@+id/option_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🚪  Cerrar sesión"
+            android:textSize="15sp"
+            android:textColor="@color/danger"
+            android:padding="18dp" />
+    </LinearLayout>
+
+</LinearLayout>
