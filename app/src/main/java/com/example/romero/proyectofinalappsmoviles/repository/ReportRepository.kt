@@ -68,6 +68,7 @@ class ReportRepository(private val db: AppDatabase) {
                     for (r in remoteReports) {
                         val existing = db.reportDao().getReportByServerId(r.id)
                         if (existing == null) {
+                            // no existe localmente → inserta
                             db.reportDao().insert(
                                 ReportEntity(
                                     title       = r.title,
@@ -77,6 +78,20 @@ class ReportRepository(private val db: AppDatabase) {
                                     status      = r.status,
                                     location    = r.location,
                                     date        = r.date,
+                                    isSynced    = true,
+                                    serverId    = r.id
+                                )
+                            )
+                        } else {
+                            // ya existe → actualiza con los datos del servidor
+                            db.reportDao().update(
+                                existing.copy(
+                                    title       = r.title,
+                                    description = r.description,
+                                    category    = r.category,
+                                    priority    = r.priority,
+                                    status      = r.status,
+                                    location    = r.location,
                                     isSynced    = true,
                                     serverId    = r.id
                                 )
