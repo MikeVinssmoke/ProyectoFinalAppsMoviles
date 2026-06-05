@@ -34,6 +34,7 @@ class EditReportFragment : Fragment() {
         b.spinnerStatus.adapter   = ArrayAdapter(requireContext(),
             android.R.layout.simple_spinner_dropdown_item, statuses)
 
+        // El observe solo llena los campos — NO configura el botón
         vm.currentReport.observe(viewLifecycleOwner) { r ->
             if (r == null) return@observe
             b.etTitle.setText(r.title)
@@ -42,25 +43,27 @@ class EditReportFragment : Fragment() {
             b.spinnerCategory.setSelection(cats.indexOf(r.category).coerceAtLeast(0))
             b.spinnerPriority.setSelection(prios.indexOf(r.priority).coerceAtLeast(0))
             b.spinnerStatus.setSelection(statuses.indexOf(r.status).coerceAtLeast(0))
+        }
 
-            b.btnSave.setOnClickListener {
-                val title = b.etTitle.text.toString().trim()
-                val desc  = b.etDescription.text.toString().trim()
-                val loc   = b.etLocation.text.toString().trim()
-                if (title.isEmpty() || desc.isEmpty() || loc.isEmpty()) {
-                    Toast.makeText(requireContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
-                vm.updateReport(r.copy(
-                    title       = title,
-                    description = desc,
-                    category    = b.spinnerCategory.selectedItem.toString(),
-                    priority    = b.spinnerPriority.selectedItem.toString(),
-                    status      = b.spinnerStatus.selectedItem.toString(),
-                    location    = loc,
-                    isSynced    = false
-                ))
+        // El botón se configura UNA sola vez FUERA del observe
+        b.btnSave.setOnClickListener {
+            val r = vm.currentReport.value ?: return@setOnClickListener
+            val title = b.etTitle.text.toString().trim()
+            val desc  = b.etDescription.text.toString().trim()
+            val loc   = b.etLocation.text.toString().trim()
+            if (title.isEmpty() || desc.isEmpty() || loc.isEmpty()) {
+                Toast.makeText(requireContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+            vm.updateReport(r.copy(
+                title       = title,
+                description = desc,
+                category    = b.spinnerCategory.selectedItem.toString(),
+                priority    = b.spinnerPriority.selectedItem.toString(),
+                status      = b.spinnerStatus.selectedItem.toString(),
+                location    = loc,
+                isSynced    = false
+            ))
         }
 
         vm.operationResult.observe(viewLifecycleOwner) { result ->

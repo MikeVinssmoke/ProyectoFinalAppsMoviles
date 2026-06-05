@@ -30,6 +30,7 @@ class ReportDetailFragment : Fragment() {
         val reportId = arguments?.getLong("reportId") ?: return
         vm.loadReport(reportId)
 
+        // El observe solo actualiza los textos — NO configura botones
         vm.currentReport.observe(viewLifecycleOwner) { r ->
             if (r == null) return@observe
             b.tvTitle.text       = r.title
@@ -46,27 +47,30 @@ class ReportDetailFragment : Fragment() {
                 else         -> Pair(R.drawable.bg_status_closed,   "Cerrado")
             }
             b.tvStatus.setBackgroundResource(bg)
-            b.tvStatus.text  = label
+            b.tvStatus.text    = label
             b.tvSyncBadge.text = if (r.isSynced) "✓ Sincronizado" else "⏳ Pendiente sync"
+        }
 
-            b.btnUpdateStatus.setOnClickListener {
-                val estados = arrayOf("ABIERTO", "EN_PROCESO", "CERRADO")
-                androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                    .setTitle("Cambiar estado")
-                    .setItems(estados) { _, which ->
-                        val nuevoEstado = estados[which]
-                        vm.updateReport(r.copy(status = nuevoEstado, isSynced = false))
-                        Toast.makeText(requireContext(), "Estado → $nuevoEstado", Toast.LENGTH_SHORT).show()
-                    }
-                    .show()
-            }
+        // Botones configurados UNA sola vez FUERA del observe
+        b.btnUpdateStatus.setOnClickListener {
+            val r = vm.currentReport.value ?: return@setOnClickListener
+            val estados = arrayOf("ABIERTO", "EN_PROCESO", "CERRADO")
+            androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Cambiar estado")
+                .setItems(estados) { _, which ->
+                    val nuevoEstado = estados[which]
+                    vm.updateReport(r.copy(status = nuevoEstado, isSynced = false))
+                    Toast.makeText(requireContext(), "Estado → $nuevoEstado", Toast.LENGTH_SHORT).show()
+                }
+                .show()
+        }
 
-            b.btnEdit.setOnClickListener {
-                findNavController().navigate(
-                    R.id.action_reportDetail_to_editReport,
-                    bundleOf("reportId" to r.id)
-                )
-            }
+        b.btnEdit.setOnClickListener {
+            val r = vm.currentReport.value ?: return@setOnClickListener
+            findNavController().navigate(
+                R.id.action_reportDetail_to_editReport,
+                bundleOf("reportId" to r.id)
+            )
         }
 
         b.btnReminder.setOnClickListener {
