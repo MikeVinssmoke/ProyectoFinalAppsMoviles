@@ -32,13 +32,26 @@ class ReportRepository(private val db: AppDatabase) {
     suspend fun syncWithServer(): Result<Unit> = try {
         val pending = db.reportDao().getUnsyncedReports()
         for (r in pending) {
-            val req = ReportRequest(r.title, r.description, r.category, r.priority, r.status, r.location)
+            val req = ReportRequest(
+                r.title, r.description, r.category,
+                r.priority, r.status, r.location
+            )
             if (r.serverId == null) {
                 val resp = NetworkManager.apiService.createReport(req)
-                if (resp.isSuccessful) resp.body()?.let { db.reportDao().markSynced(r.id, it.id) }
+                if (resp.isSuccessful) resp.body()?.let {
+                    db.reportDao().markSynced(r.id, it.id)
+                    val events = db.syncEventDao().getPendingEventsList()
+                    events.filter { e -> e.reportId == r.id }.forEach { e ->
+                        db.syncEventDao().markSynced(e.id)
+                    }
+                }
             } else {
                 NetworkManager.apiService.updateReport(r.serverId, req)
                 db.reportDao().markSynced(r.id, r.serverId)
+                val events = db.syncEventDao().getPendingEventsList()
+                events.filter { e -> e.reportId == r.id }.forEach { e ->
+                    db.syncEventDao().markSynced(e.id)
+                }
             }
         }
         db.syncEventDao().clearSynced()
@@ -46,7 +59,6 @@ class ReportRepository(private val db: AppDatabase) {
     } catch (e: Exception) {
         Result.failure(e)
     }
-
 
     suspend fun fetchFromServer(): Result<Unit> {
         return try {
