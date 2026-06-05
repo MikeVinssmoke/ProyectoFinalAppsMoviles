@@ -30,7 +30,6 @@ class ReportDetailFragment : Fragment() {
         val reportId = arguments?.getLong("reportId") ?: return
         vm.loadReport(reportId)
 
-        // El observe solo actualiza los textos — NO configura botones
         vm.currentReport.observe(viewLifecycleOwner) { r ->
             if (r == null) return@observe
             b.tvTitle.text       = r.title
@@ -49,9 +48,10 @@ class ReportDetailFragment : Fragment() {
             b.tvStatus.setBackgroundResource(bg)
             b.tvStatus.text    = label
             b.tvSyncBadge.text = if (r.isSynced) "✓ Sincronizado" else "⏳ Pendiente sync"
+            b.btnDelete.visibility = if (r.serverId == null) View.VISIBLE else View.GONE
+            // ↑ solo muestra el botón si el reporte nunca se subió al servidor
         }
 
-        // Botones configurados UNA sola vez FUERA del observe
         b.btnUpdateStatus.setOnClickListener {
             val r = vm.currentReport.value ?: return@setOnClickListener
             val estados = arrayOf("ABIERTO", "EN_PROCESO", "CERRADO")
@@ -83,6 +83,20 @@ class ReportDetailFragment : Fragment() {
                     Toast.makeText(requireContext(), "Recordatorio programado", Toast.LENGTH_SHORT).show()
                 }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
             }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
+        }
+
+        b.btnDelete.setOnClickListener {
+            val r = vm.currentReport.value ?: return@setOnClickListener
+            androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Eliminar reporte")
+                .setMessage("¿Estás seguro que quieres eliminar este reporte? Esta acción no se puede deshacer.")
+                .setPositiveButton("Eliminar") { _, _ ->
+                    vm.deleteReport(r)
+                    Toast.makeText(requireContext(), "Reporte eliminado", Toast.LENGTH_SHORT).show()
+                    findNavController().navigateUp()
+                }
+                .setNegativeButton("Cancelar", null)
+                .show()
         }
     }
 
