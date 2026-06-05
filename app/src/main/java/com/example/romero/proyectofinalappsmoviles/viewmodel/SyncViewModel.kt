@@ -1,6 +1,7 @@
 package com.example.romero.proyectofinalappsmoviles.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.romero.proyectofinalappsmoviles.data.local.AppDatabase
 import com.example.romero.proyectofinalappsmoviles.repository.ReportRepository
@@ -32,16 +33,22 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
     fun synchronize() {
         viewModelScope.launch {
             _isSyncing.value = true
+            Log.d("SYNC", "=== SYNC INICIADO ===")
 
+            Log.d("SYNC", "Subiendo cambios locales...")
+            val syncResult = reportRepo.syncWithServer()
+            Log.d("SYNC", "syncResult isSuccess=${syncResult.isSuccess}")
+
+            Log.d("SYNC", "Bajando datos del servidor...")
             val fetchResult = reportRepo.fetchFromServer()
-            val syncResult  = reportRepo.syncWithServer()
+            Log.d("SYNC", "fetchResult isSuccess=${fetchResult.isSuccess}")
 
             syncRepo.clearSynced()
 
             _syncResult.value = if (fetchResult.isFailure || syncResult.isFailure) {
                 Result.failure(
-                    fetchResult.exceptionOrNull()
-                        ?: syncResult.exceptionOrNull()
+                    syncResult.exceptionOrNull()
+                        ?: fetchResult.exceptionOrNull()
                         ?: Exception("Error desconocido")
                 )
             } else {
@@ -49,6 +56,7 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             _isSyncing.value = false
+            Log.d("SYNC", "=== SYNC TERMINADO ===")
         }
     }
 }

@@ -24,8 +24,9 @@ class ReportRepository(private val db: AppDatabase) {
     }
 
     suspend fun updateReport(report: ReportEntity) {
+        android.util.Log.d("EDIT", "updateReport llamado id=${report.id} title=${report.title}")
         db.reportDao().update(report.copy(isSynced = false))
-        // ↑ fuerza isSynced = false para que entre en pendientes
+        android.util.Log.d("EDIT", "Room actualizado OK")
         db.syncEventDao().insert(SyncEventEntity(reportId = report.id, action = "UPDATE"))
     }
 
